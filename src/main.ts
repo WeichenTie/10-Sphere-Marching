@@ -14,6 +14,7 @@ import {
   Clock,
 } from "three";
 import { throttle } from "lodash";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 Cache.enabled = true;
 const loader = new FileLoader();
@@ -52,9 +53,6 @@ function animate(time: number) {
   delta += debugDelta;
 
   if (delta > interval) {
-    camera.position.x = 15 * Math.sin(time * 0.00051);
-    camera.position.z = 12 * Math.cos(time * 0.00041);
-    camera.lookAt(0, 0, 0);
     quad.material.uniforms.u_Time = { value: time * 0.0005 };
 
     renderer.render(scene, camera);
@@ -63,7 +61,7 @@ function animate(time: number) {
   requestAnimationFrame(animate);
 }
 
-const vert = loader.loadAsync("shaders/spheretracing/vert.3se");
+const vert = loader.loadAsync("shaders/spheretracing/vert.glsl");
 const frag = loader.loadAsync("shaders/spheretracing/frag.glsl");
 const cubeMap = cubeMapLoader
   .setPath("cubemaps/aurora/")
@@ -86,6 +84,11 @@ const camera = new PerspectiveCamera(
   0.1,
   2000
 );
+
+camera.position.x = 20;
+camera.lookAt(0, 0, 0);
+
+new OrbitControls(camera, renderer.getContext().canvas as HTMLCanvasElement);
 
 const quad = new Mesh(
   new PlaneGeometry(2, 2),
@@ -112,7 +115,5 @@ const quad = new Mesh(
   })
 );
 scene.add(quad);
-camera.position.z = 15;
-camera.position.y = 10;
 handleResize();
 requestAnimationFrame(animate);

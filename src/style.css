@@ -4,4 +4,9 @@ body {
   overflow: hidden;
   margin: 0;
   background-color: black;
+  cursor: grab;
+}
+
+canvas:active {
+  cursor: grabbing;
 }
